@@ -96,6 +96,7 @@ Each model corresponds to a different daily site-level truck-capacity constraint
 ## 💻 Running Locally
 
 Install the required packages:
+```bash
 pip install -r requirements.txt
 
 ---
@@ -112,4 +113,4 @@ The Streamlit interface is intended as a prototype implementation of the trained
 The recommendations are generated under the assumptions and case-study parameters described in the associated manuscript, including the 21-day planning horizon, shared storage constraint and one-day replenishment structure.
 
 ---
-```bash
+
