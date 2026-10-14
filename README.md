@@ -98,7 +98,7 @@ Each model corresponds to a different daily site-level truck-capacity constraint
 Install the required packages:
 ```bash
 pip install -r requirements.txt
-
+```bash
 ---
 
 ## 🔬 Reproducibility
