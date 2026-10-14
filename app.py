@@ -247,7 +247,7 @@ with st.form("logistics_input_form"):
         "Current project day",
         min_value=1,
         max_value=21,
-        value=13,
+        value=1,
         step=1,
         help="Day within the 21-day structural-phase planning horizon."
     )
@@ -267,7 +267,7 @@ with st.form("logistics_input_form"):
         a_inventory = st.number_input(
             "Current inventory",
             min_value=0.0,
-            value=6.0,
+            value=0.0,
             step=0.1,
             key="a_inventory"
         )
@@ -283,7 +283,7 @@ with st.form("logistics_input_form"):
         a_today = st.number_input(
             "Planned demand today",
             min_value=0.0,
-            value=3.0,
+            value=0.0,
             step=0.1,
             key="a_today"
         )
@@ -291,7 +291,7 @@ with st.form("logistics_input_form"):
         a_tomorrow = st.number_input(
             "Planned demand tomorrow",
             min_value=0.0,
-            value=6.0,
+            value=0.0,
             step=0.1,
             key="a_tomorrow"
         )
@@ -299,7 +299,7 @@ with st.form("logistics_input_form"):
         a_pipeline = st.number_input(
             "Incoming delivery",
             min_value=0.0,
-            value=3.0,
+            value=0.0,
             step=0.1,
             key="a_pipeline"
         )
@@ -315,7 +315,7 @@ with st.form("logistics_input_form"):
         b_inventory = st.number_input(
             "Current inventory",
             min_value=0.0,
-            value=4.0,
+            value=0.0,
             step=0.1,
             key="b_inventory"
         )
@@ -331,7 +331,7 @@ with st.form("logistics_input_form"):
         b_today = st.number_input(
             "Planned demand today",
             min_value=0.0,
-            value=2.0,
+            value=0.0,
             step=0.1,
             key="b_today"
         )
@@ -339,7 +339,7 @@ with st.form("logistics_input_form"):
         b_tomorrow = st.number_input(
             "Planned demand tomorrow",
             min_value=0.0,
-            value=4.0,
+            value=0.0,
             step=0.1,
             key="b_tomorrow"
         )
@@ -347,7 +347,7 @@ with st.form("logistics_input_form"):
         b_pipeline = st.number_input(
             "Incoming delivery",
             min_value=0.0,
-            value=2.0,
+            value=0.0,
             step=0.1,
             key="b_pipeline"
         )
@@ -365,7 +365,7 @@ with st.form("logistics_input_form"):
         c_inventory = st.number_input(
             "Current inventory",
             min_value=0.0,
-            value=4.0,
+            value=0.0,
             step=0.1,
             key="c_inventory"
         )
@@ -381,7 +381,7 @@ with st.form("logistics_input_form"):
         c_today = st.number_input(
             "Planned demand today",
             min_value=0.0,
-            value=4.0,
+            value=0.0,
             step=0.1,
             key="c_today"
         )
@@ -389,7 +389,7 @@ with st.form("logistics_input_form"):
         c_tomorrow = st.number_input(
             "Planned demand tomorrow",
             min_value=0.0,
-            value=4.0,
+            value=0.0,
             step=0.1,
             key="c_tomorrow"
         )
@@ -397,7 +397,7 @@ with st.form("logistics_input_form"):
         c_pipeline = st.number_input(
             "Incoming delivery",
             min_value=0.0,
-            value=4.0,
+            value=0.0,
             step=0.1,
             key="c_pipeline"
         )
