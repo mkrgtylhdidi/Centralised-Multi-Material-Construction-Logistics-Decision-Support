@@ -96,15 +96,20 @@ Each model corresponds to a different daily site-level truck-capacity constraint
 ## 💻 Running Locally
 
 Install the required packages:
-
-```bash
 pip install -r requirements.txt
 
-🔬 Reproducibility
+---
+
+## 🔬 Reproducibility
 
 The accompanying notebook provides the final environment configuration, DQN training procedure, multi-scenario evaluation and truck-capacity sensitivity analysis used in the associated study.
 The Streamlit interface is intended as a prototype implementation of the trained decision policy rather than a standalone commercial planning system.
 
-📌 Notes
+---
+
+## 📌 Notes
 
 The recommendations are generated under the assumptions and case-study parameters described in the associated manuscript, including the 21-day planning horizon, shared storage constraint and one-day replenishment structure.
+
+---
+```bash
