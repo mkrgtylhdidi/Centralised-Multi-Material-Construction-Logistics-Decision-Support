@@ -27,24 +27,20 @@ st.set_page_config(
 
 STATE_DIM = 17
 
-# Shared site storage capacity
 SHARED_STORAGE_CAPACITY = 20.0  # m²
 
-# Storage footprint per unit
 STORAGE_FOOTPRINT = {
     "A": 1.0,
     "B": 1.5,
     "C": 1.2,
 }
 
-# Quantity transported by one truck
 TRUCK_CAPACITY = {
     "A": 3.0,
     "B": 2.0,
     "C": 4.0,
 }
 
-# Folder containing this app.py file
 APP_DIR = Path(__file__).resolve().parent
 
 MODEL_PATHS = {
@@ -56,7 +52,7 @@ MODEL_PATHS = {
 
 # ============================================================
 # 3. DQN NETWORK
-# Must exactly match the network used during training
+# Must exactly match training architecture
 # ============================================================
 
 class QNetwork(nn.Module):
@@ -67,10 +63,8 @@ class QNetwork(nn.Module):
         self.net = nn.Sequential(
             nn.Linear(state_dim, 32),
             nn.ReLU(),
-
             nn.Linear(32, 32),
             nn.ReLU(),
-
             nn.Linear(32, action_dim)
         )
 
@@ -80,7 +74,7 @@ class QNetwork(nn.Module):
 
 # ============================================================
 # 4. BUILD JOINT ACTION SPACE
-# Must exactly match the training environment
+# Must exactly match training environment
 # ============================================================
 
 def build_joint_action_space(vehicle_limit):
@@ -92,9 +86,7 @@ def build_joint_action_space(vehicle_limit):
             for c in range(vehicle_limit + 1):
 
                 if a + b + c <= vehicle_limit:
-                    joint_actions.append(
-                        (a, b, c)
-                    )
+                    joint_actions.append((a, b, c))
 
     return joint_actions
 
@@ -118,10 +110,6 @@ def load_model(vehicle_limit):
         map_location="cpu"
     )
 
-    # --------------------------------------------------------
-    # Check model metadata
-    # --------------------------------------------------------
-
     saved_vehicle_limit = checkpoint["vehicle_limit"]
     state_dim = checkpoint["state_dim"]
     action_dim = checkpoint["action_dim"]
@@ -138,10 +126,6 @@ def load_model(vehicle_limit):
             f"but checkpoint contains {state_dim}."
         )
 
-    # --------------------------------------------------------
-    # Build matching action space
-    # --------------------------------------------------------
-
     joint_actions = build_joint_action_space(
         vehicle_limit
     )
@@ -153,10 +137,6 @@ def load_model(vehicle_limit):
             f"but generated action space contains "
             f"{len(joint_actions)}."
         )
-
-    # --------------------------------------------------------
-    # Rebuild network and load trained weights
-    # --------------------------------------------------------
 
     model = QNetwork(
         state_dim=state_dim,
@@ -173,7 +153,7 @@ def load_model(vehicle_limit):
 
 
 # ============================================================
-# 6. USER INTERFACE HEADER
+# 6. HEADER
 # ============================================================
 
 st.title(
@@ -191,7 +171,7 @@ st.write(
 
 
 # ============================================================
-# 7. DAILY TRUCK CAPACITY SELECTION
+# 7. SITE DELIVERY CAPACITY
 # ============================================================
 
 st.subheader("1. Site delivery capacity")
@@ -212,11 +192,6 @@ try:
         vehicle_limit
     )
 
-    st.success(
-        f"Decision policy loaded for a daily capacity "
-        f"of {vehicle_limit} trucks."
-    )
-
 except Exception as e:
 
     st.error(
@@ -226,11 +201,34 @@ except Exception as e:
     st.stop()
 
 
+# ------------------------------------------------------------
+# Make selected capacity visually prominent
+# ------------------------------------------------------------
+
+capacity_col1, capacity_col2 = st.columns(2)
+
+capacity_col1.metric(
+    "Selected daily truck capacity",
+    f"{vehicle_limit} trucks/day"
+)
+
+capacity_col2.metric(
+    "Available DQN action space",
+    f"{len(joint_actions)} feasible allocations"
+)
+
+st.caption(
+    f"Using the trained DQN policy for V={vehicle_limit}."
+)
+
+
 # ============================================================
 # 8. OPERATIONAL INPUT FORM
 # ============================================================
 
-st.subheader("2. Current project and site information")
+st.subheader(
+    "2. Current project and site information"
+)
 
 st.caption(
     "Enter information available from the current programme, "
@@ -241,24 +239,20 @@ with st.form("logistics_input_form"):
 
     # --------------------------------------------------------
     # Project day
-    # Human-facing day is 1-21.
-    # DQN state uses 0-20 internally.
+    # Human-facing day = 1-21
+    # DQN internal state = 0-20
     # --------------------------------------------------------
 
     project_day = st.number_input(
         "Current project day",
         min_value=1,
         max_value=21,
-        value=1,
+        value=13,
         step=1,
         help="Day within the 21-day structural-phase planning horizon."
     )
 
     st.markdown("---")
-
-    # --------------------------------------------------------
-    # Material columns
-    # --------------------------------------------------------
 
     col_a, col_b, col_c = st.columns(3)
 
@@ -271,15 +265,15 @@ with st.form("logistics_input_form"):
         st.markdown("### Material A — Rebar")
 
         a_inventory = st.number_input(
-            "Current inventory (A)",
+            "Current inventory",
             min_value=0.0,
-            value=0.0,
+            value=6.0,
             step=0.1,
             key="a_inventory"
         )
 
         a_backlog = st.number_input(
-            "Current backlog (A)",
+            "Current backlog",
             min_value=0.0,
             value=0.0,
             step=0.1,
@@ -287,25 +281,25 @@ with st.form("logistics_input_form"):
         )
 
         a_today = st.number_input(
-            "Planned demand today (A)",
+            "Planned demand today",
             min_value=0.0,
-            value=0.0,
+            value=3.0,
             step=0.1,
             key="a_today"
         )
 
         a_tomorrow = st.number_input(
-            "Planned demand tomorrow (A)",
+            "Planned demand tomorrow",
             min_value=0.0,
-            value=0.0,
+            value=6.0,
             step=0.1,
             key="a_tomorrow"
         )
 
         a_pipeline = st.number_input(
-            "Known incoming delivery / pipeline (A)",
+            "Incoming delivery",
             min_value=0.0,
-            value=0.0,
+            value=3.0,
             step=0.1,
             key="a_pipeline"
         )
@@ -319,15 +313,15 @@ with st.form("logistics_input_form"):
         st.markdown("### Material B — Formwork")
 
         b_inventory = st.number_input(
-            "Current inventory (B)",
+            "Current inventory",
             min_value=0.0,
-            value=0.0,
+            value=4.0,
             step=0.1,
             key="b_inventory"
         )
 
         b_backlog = st.number_input(
-            "Current backlog (B)",
+            "Current backlog",
             min_value=0.0,
             value=0.0,
             step=0.1,
@@ -335,25 +329,25 @@ with st.form("logistics_input_form"):
         )
 
         b_today = st.number_input(
-            "Planned demand today (B)",
+            "Planned demand today",
             min_value=0.0,
-            value=0.0,
+            value=2.0,
             step=0.1,
             key="b_today"
         )
 
         b_tomorrow = st.number_input(
-            "Planned demand tomorrow (B)",
+            "Planned demand tomorrow",
             min_value=0.0,
-            value=0.0,
+            value=4.0,
             step=0.1,
             key="b_tomorrow"
         )
 
         b_pipeline = st.number_input(
-            "Known incoming delivery / pipeline (B)",
+            "Incoming delivery",
             min_value=0.0,
-            value=0.0,
+            value=2.0,
             step=0.1,
             key="b_pipeline"
         )
@@ -364,18 +358,20 @@ with st.form("logistics_input_form"):
 
     with col_c:
 
-        st.markdown("### Material C — Mesh / Palletised Material")
+        st.markdown(
+            "### Material C — Mesh / Palletised"
+        )
 
         c_inventory = st.number_input(
-            "Current inventory (C)",
+            "Current inventory",
             min_value=0.0,
-            value=0.0,
+            value=4.0,
             step=0.1,
             key="c_inventory"
         )
 
         c_backlog = st.number_input(
-            "Current backlog (C)",
+            "Current backlog",
             min_value=0.0,
             value=0.0,
             step=0.1,
@@ -383,25 +379,25 @@ with st.form("logistics_input_form"):
         )
 
         c_today = st.number_input(
-            "Planned demand today (C)",
+            "Planned demand today",
             min_value=0.0,
-            value=0.0,
+            value=4.0,
             step=0.1,
             key="c_today"
         )
 
         c_tomorrow = st.number_input(
-            "Planned demand tomorrow (C)",
+            "Planned demand tomorrow",
             min_value=0.0,
-            value=0.0,
+            value=4.0,
             step=0.1,
             key="c_tomorrow"
         )
 
         c_pipeline = st.number_input(
-            "Known incoming delivery / pipeline (C)",
+            "Incoming delivery",
             min_value=0.0,
-            value=0.0,
+            value=4.0,
             step=0.1,
             key="c_pipeline"
         )
@@ -422,27 +418,13 @@ with st.form("logistics_input_form"):
 if submitted:
 
     # --------------------------------------------------------
-    # Convert human-facing project day to DQN state day
-    #
-    # Human:
-    # Day 1 ... Day 21
-    #
-    # Training state:
-    # 0 ... 20
+    # Convert human-facing day to training state
     # --------------------------------------------------------
 
     day_state = project_day - 1
 
     # --------------------------------------------------------
     # Calculate shared storage automatically
-    #
-    # This reproduces:
-    #
-    # shared_storage_used =
-    #     sum(inventory[p] * storage_footprint[p])
-    #
-    # shared_storage_utilisation =
-    #     shared_storage_used / shared_storage_capacity
     # --------------------------------------------------------
 
     shared_storage_used = (
@@ -457,30 +439,7 @@ if submitted:
     )
 
     # --------------------------------------------------------
-    # Reconstruct EXACT 17-dimensional DQN state
-    #
-    # [
-    #     day,
-    #     shared_storage_utilisation,
-    #
-    #     A_inventory,
-    #     A_backlog,
-    #     A_planned_today,
-    #     A_planned_tomorrow,
-    #     A_pipeline,
-    #
-    #     B_inventory,
-    #     B_backlog,
-    #     B_planned_today,
-    #     B_planned_tomorrow,
-    #     B_pipeline,
-    #
-    #     C_inventory,
-    #     C_backlog,
-    #     C_planned_today,
-    #     C_planned_tomorrow,
-    #     C_pipeline
-    # ]
+    # Exact 17-dimensional state used during training
     # --------------------------------------------------------
 
     state = np.array(
@@ -508,10 +467,6 @@ if submitted:
         ],
         dtype=np.float32
     )
-
-    # --------------------------------------------------------
-    # Safety check
-    # --------------------------------------------------------
 
     if len(state) != STATE_DIM:
 
@@ -544,7 +499,7 @@ if submitted:
         ).item()
 
     # --------------------------------------------------------
-    # Convert action index back into truck allocation
+    # Convert action index to truck allocation
     # --------------------------------------------------------
 
     recommended_action = joint_actions[
@@ -556,7 +511,7 @@ if submitted:
     )
 
     # --------------------------------------------------------
-    # Corresponding delivery quantities
+    # Convert trucks to material quantities
     # --------------------------------------------------------
 
     a_quantity = (
@@ -575,20 +530,17 @@ if submitted:
         recommended_action
     )
 
+
     # ========================================================
-    # 10. DISPLAY CURRENT STORAGE INFORMATION
+    # 10. CURRENT SITE STORAGE
     # ========================================================
 
     st.markdown("---")
 
-    st.subheader(
-        "Current site storage"
-    )
-
     storage_col1, storage_col2 = st.columns(2)
 
     storage_col1.metric(
-        "Shared storage currently used",
+        "Current shared storage",
         f"{shared_storage_used:.1f} m²"
     )
 
@@ -601,96 +553,79 @@ if submitted:
 
         st.warning(
             f"Current material inventory exceeds the "
-            f"{SHARED_STORAGE_CAPACITY:.0f} m² shared "
-            f"storage threshold."
+            f"{SHARED_STORAGE_CAPACITY:.0f} m² "
+            f"shared-storage threshold."
         )
 
+
     # ========================================================
-    # 11. DISPLAY RECOMMENDED ALLOCATION
+    # 11. RECOMMENDED DELIVERY ALLOCATION
     # ========================================================
 
     st.markdown("---")
 
     st.subheader(
-        "3. Recommended truck allocation"
+        "3. Recommended delivery allocation"
     )
 
-    st.write(
-        f"Recommended allocation under the selected "
-        f"daily capacity of **{vehicle_limit} trucks**:"
+    st.caption(
+        "DQN recommendation based on the current operational state."
     )
 
     rec_a, rec_b, rec_c = st.columns(3)
 
-    rec_a.metric(
-        "Material A — Rebar",
-        f"{a_trucks} truck(s)",
-        help=(
-            f"Equivalent ordered quantity: "
+    with rec_a:
+
+        st.metric(
+            "Rebar — Material A",
+            f"{a_trucks} truck(s)"
+        )
+
+        st.caption(
+            f"Ordered quantity: "
             f"{a_quantity:.1f} units"
         )
-    )
 
-    rec_b.metric(
-        "Material B — Formwork",
-        f"{b_trucks} truck(s)",
-        help=(
-            f"Equivalent ordered quantity: "
+    with rec_b:
+
+        st.metric(
+            "Formwork — Material B",
+            f"{b_trucks} truck(s)"
+        )
+
+        st.caption(
+            f"Ordered quantity: "
             f"{b_quantity:.1f} units"
         )
-    )
 
-    rec_c.metric(
-        "Material C — Mesh / Palletised",
-        f"{c_trucks} truck(s)",
-        help=(
-            f"Equivalent ordered quantity: "
+    with rec_c:
+
+        st.metric(
+            "Mesh / Palletised — Material C",
+            f"{c_trucks} truck(s)"
+        )
+
+        st.caption(
+            f"Ordered quantity: "
             f"{c_quantity:.1f} units"
         )
-    )
 
     st.success(
-        f"Total recommended allocation: "
+        f"Recommended total allocation: "
         f"{total_trucks} of "
         f"{vehicle_limit} available trucks."
     )
 
-    # --------------------------------------------------------
-    # Delivery quantity summary
-    # --------------------------------------------------------
-
-    st.write(
-        "**Corresponding ordered quantities:**"
-    )
-
-    st.table(
-        {
-            "Material": [
-                "A — Rebar",
-                "B — Formwork",
-                "C — Mesh / Palletised"
-            ],
-            "Recommended trucks": [
-                a_trucks,
-                b_trucks,
-                c_trucks
-            ],
-            "Quantity": [
-                a_quantity,
-                b_quantity,
-                c_quantity
-            ]
-        }
-    )
-
     st.caption(
-        "The recommendation represents the joint truck-allocation "
-        "decision generated by the trained DQN under the model's "
-        "one-day replenishment assumption."
+        "The recommendation represents the coordinated "
+        "joint truck-allocation decision generated by the "
+        "trained DQN under the model's one-day replenishment "
+        "assumption."
     )
+
 
     # ========================================================
-    # 12. OPTIONAL TECHNICAL INFORMATION
+    # 12. TECHNICAL INFORMATION
     # ========================================================
 
     with st.expander(
