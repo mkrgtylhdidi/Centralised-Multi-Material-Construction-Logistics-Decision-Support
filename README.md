@@ -1,48 +1,81 @@
-# 🏗️ DQN-Based Construction Logistics Decision Support
+# 🏗️ Centralised Multi-Material DQN for Construction Logistics
 
-This repository provides a prototype **construction logistics decision-support tool** based on a trained **Deep Q-Network (DQN)**.
+This repository contains the implementation and decision-support prototype for a **centralised Deep Q-Network (DQN) framework for multi-material construction logistics planning**.
 
-The system recommends a coordinated daily truck allocation for three construction materials under shared delivery-capacity and storage constraints.
+Unlike a single-material ordering model, the framework makes **one coordinated site-level decision across three material types** while accounting for shared truck availability and shared on-site storage.
 
----
-
-## 🔗 Try the Live App
-
-👉 [Click here to try the Streamlit app](https://construction-dqn-app-2lmryrp2uwbgms7aijzf6x.streamlit.app/)
-
-The app allows users to select the available daily truck capacity and enter current project and site information. The trained DQN then returns a recommended truck allocation for the three material types.
-
----
-
-## 🚚 Materials and Delivery Capacity
-
-The prototype considers three construction materials:
+The current case study considers a **21-day planning horizon** and jointly allocates delivery trucks to:
 
 - **Material A — Rebar**
 - **Material B — Formwork**
 - **Material C — Mesh / palletised material**
 
-Users can select one of three daily truck-capacity limits:
+---
+
+## 🔗 Try the Live Decision-Support App
+
+👉 **[Launch the Streamlit application](STREAMLIT_LINK_HERE)**
+
+The application allows the user to select the available daily fleet capacity and enter current project and site information. The corresponding trained DQN then recommends a **joint truck allocation across all three materials**.
+
+---
+
+## 🚚 Centralised Site-Level Decision
+
+The DQN does not make three independent ordering decisions.
+
+Instead, each action specifies a coordinated allocation:
+
+```text
+(A trucks, B trucks, C trucks)
+```
+
+subject to the shared site-level constraint:
+
+```text
+A trucks + B trucks + C trucks ≤ daily fleet capacity
+```
+
+This allows the policy to allocate limited delivery capacity across competing material requirements.
+
+---
+
+## 🚛 Selectable Daily Fleet Capacity
+
+The prototype provides separately trained DQN policies for three daily fleet-capacity settings:
 
 - **V = 4 trucks/day**
 - **V = 5 trucks/day**
 - **V = 6 trucks/day**
 
-A separately trained DQN model is loaded for each capacity level.
-
 The corresponding joint-action spaces contain:
 
-- V = 4 → **35 feasible allocations**
-- V = 5 → **56 feasible allocations**
-- V = 6 → **84 feasible allocations**
+- V = 4 → **35 feasible joint allocations**
+- V = 5 → **56 feasible joint allocations**
+- V = 6 → **84 feasible joint allocations**
+
+Selecting a fleet size in the Streamlit interface automatically loads the corresponding trained DQN model.
 
 ---
 
-## 🧠 Operational Information Used by the DQN
+## 📅 Planning Horizon
 
-The interface uses routinely available project and site-management information.
+The case study represents a **21-day construction planning horizon**.
 
-For each material, the user provides:
+The DQN uses the current project position together with near-term planned demand and current logistics conditions to support daily delivery decisions throughout the planning period.
+
+---
+
+## 🧠 Operational State Information
+
+The centralised DQN uses a **17-dimensional operational state**.
+
+The state contains:
+
+- Current project day
+- Shared storage utilisation
+
+For each of the three materials:
 
 - Current inventory
 - Current backlog
@@ -50,35 +83,80 @@ For each material, the user provides:
 - Planned demand tomorrow
 - Known incoming delivery
 
-The user also enters the current project day.
+The interface automatically derives shared storage utilisation from the current inventories.
 
-The interface automatically calculates shared storage utilisation and internally constructs the **17-dimensional operational state** used by the trained DQN.
+The user therefore interacts with familiar project and site-management information rather than with a technical reinforcement-learning state vector.
 
-The user does **not** need to specify reinforcement-learning parameters or manually estimate latent uncertainty variables such as weather severity, productivity factors, or disruption probabilities.
+The application does **not** require the user to manually estimate latent uncertainty variables such as weather severity, productivity factors, disruption probabilities or subjective risk levels.
 
 ---
 
-## ⚙️ How to Use
+## 🏗️ Shared Site Constraints
 
-1. Select the available daily truck capacity: **4, 5, or 6 trucks/day**
+The three material flows are coordinated under common site-level constraints.
+
+The framework considers:
+
+- Shared daily truck capacity
+- Shared site-storage capacity
+- Material-specific truck capacities
+- Material-specific storage footprints
+- Inventory and backlog
+- Planned near-term demand
+- Known incoming deliveries
+
+This allows the DQN to represent the trade-offs created when several materials compete for limited construction-logistics resources.
+
+---
+
+## ⚙️ How to Use the App
+
+1. Select the available daily fleet capacity: **4, 5 or 6 trucks/day**
 2. Enter the current project day
-3. Enter the current inventory, backlog, planned demand and incoming delivery information for Materials A, B and C
+3. Enter inventory, backlog, planned demand and incoming delivery information for Materials A, B and C
 4. Click **Generate delivery recommendation**
-5. The system returns the recommended coordinated truck allocation for the three materials
+5. The trained DQN returns the recommended joint allocation of trucks across the three materials
 
-The interface also reports the corresponding ordered quantities and current shared-storage utilisation.
+The interface also displays:
+
+- Current shared-storage use
+- Storage utilisation
+- Recommended truck allocation for each material
+- Corresponding ordered quantities
 
 ---
 
-## 📦 Trained Models
+## 📦 Trained DQN Models
 
-The repository contains three separately trained DQN models:
+The repository contains separately trained models for each fleet-capacity setting:
 
 - `dqn_V4_seed_42.pth`
 - `dqn_V5_seed_42.pth`
 - `dqn_V6_seed_42.pth`
 
-Each model corresponds to a different daily site-level truck-capacity constraint.
+Each model has the same 17-dimensional operational state but a different output dimension corresponding to its feasible joint-action space.
+
+---
+
+## 🔄 Relationship to the Earlier Single-Material Prototype
+
+An earlier public repository, [`dqn-order-app`](https://github.com/mkrgtylhdidi/dqn-order-app), demonstrates a **single-material reinforcement-steel ordering model**.
+
+The present repository addresses a different and broader decision problem.
+
+The main differences are:
+
+| Earlier prototype | Current framework |
+|---|---|
+| Single material | Three materials |
+| Independent order-quantity decision | Centralised joint truck-allocation decision |
+| One trained ordering model | Separate DQN policies for V = 4, 5 and 6 |
+| Material-level storage | Shared site-level storage constraint |
+| 8 state features | 17-dimensional centralised operational state |
+| Discrete order quantity | Joint `(A, B, C)` fleet allocation |
+| Single-material logistics support | Coordinated site-level logistics support |
+
+This repository therefore focuses on **multi-material coordination under shared construction-logistics constraints**, rather than extending the earlier interface only cosmetically.
 
 ---
 
@@ -89,7 +167,7 @@ Each model corresponds to a different daily site-level truck-capacity constraint
 - `dqn_V5_seed_42.pth` — trained DQN for V = 5
 - `dqn_V6_seed_42.pth` — trained DQN for V = 6
 - `requirements.txt` — Python dependencies
-- `DQN_training_and_evaluation.ipynb` — training and evaluation notebook *(to be added)*
+- `DQN_training_and_evaluation.ipynb` — final training and evaluation notebook *(to be added)*
 
 ---
 
@@ -101,7 +179,7 @@ Install the required packages:
 pip install -r requirements.txt
 ```
 
-Run the Streamlit app:
+Run the Streamlit application:
 
 ```bash
 streamlit run app.py
@@ -111,14 +189,12 @@ streamlit run app.py
 
 ## 🔬 Reproducibility
 
-The accompanying notebook provides the final environment configuration, DQN training procedure, multi-scenario evaluation and truck-capacity sensitivity analysis used in the associated study.
+The accompanying notebook provides the final environment configuration, DQN training procedure, multi-scenario evaluation, benchmark evaluation and truck-capacity sensitivity analysis used in the associated study.
 
-The Streamlit interface is intended as a prototype implementation of the trained decision policy rather than a standalone commercial planning system.
+The Streamlit interface is a prototype implementation of the trained decision policies and is intended to demonstrate how the framework can be translated into an operational construction-logistics decision-support tool.
 
 ---
 
 ## 📌 Notes
 
-The recommendations are generated under the assumptions and case-study parameters described in the associated manuscript, including the 21-day planning horizon, shared storage constraint and one-day replenishment structure.
-
----
+The recommendations are generated under the assumptions and case-study parameters described in the associated manuscript, including the **21-day planning horizon**, shared truck-capacity constraint, shared storage constraint and one-day replenishment structure.
