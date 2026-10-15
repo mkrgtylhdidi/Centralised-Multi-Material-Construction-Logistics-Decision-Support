@@ -1,6 +1,6 @@
 # ============================================================
-# Construction Logistics Decision Support Interface
-# Centralised DQN
+# Centralised Multi-Material Construction Logistics Decision Support
+# Deep Q-Network (DQN) Interface
 # ============================================================
 
 import streamlit as st
@@ -15,11 +15,18 @@ from pathlib import Path
 # ============================================================
 
 st.set_page_config(
-    page_title="Construction Logistics Decision Support",
+    page_title="Centralised Multi-Material Construction Logistics Decision Support",
     page_icon="🏗️",
     layout="wide"
 )
 
+st.title("Centralised Multi-Material Construction Logistics Decision Support")
+
+st.caption(
+    "This prototype uses a centralised Deep Q-Network (DQN) to recommend "
+    "coordinated daily truck allocations for three construction materials "
+    "under shared delivery-capacity and storage constraints."
+)
 
 # ============================================================
 # 2. MODEL / CASE CONSTANTS
