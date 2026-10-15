@@ -20,14 +20,6 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("Centralised Multi-Material Construction Logistics Decision Support")
-
-st.caption(
-    "This prototype uses a centralised Deep Q-Network (DQN) to recommend "
-    "coordinated daily truck allocations for three construction materials "
-    "under shared delivery-capacity and storage constraints."
-)
-
 # ============================================================
 # 2. MODEL / CASE CONSTANTS
 # ============================================================
@@ -163,17 +155,12 @@ def load_model(vehicle_limit):
 # 6. HEADER
 # ============================================================
 
-st.title(
-    "Construction Logistics Decision Support"
-)
+st.title("Centralised Multi-Material Construction Logistics Decision Support")
 
-st.write(
-    """
-    This prototype uses a trained Deep Q-Network (DQN) to
-    recommend a coordinated daily truck allocation for three
-    construction materials under a shared delivery-capacity
-    constraint.
-    """
+st.caption(
+    "This prototype uses a centralised Deep Q-Network (DQN) to recommend "
+    "coordinated daily truck allocations for three construction materials "
+    "under shared delivery-capacity and storage constraints."
 )
 
 
