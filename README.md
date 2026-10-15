@@ -156,7 +156,7 @@ The main differences are:
 | Discrete order quantity | Joint `(A, B, C)` fleet allocation |
 | Single-material logistics support | Coordinated site-level logistics support |
 
-This repository therefore focuses on **multi-material coordination under shared construction-logistics constraints**, rather than extending the earlier interface only cosmetically.
+This repository therefore focuses on **multi-material coordination under shared construction-logistics constraints**.
 
 ---
 
