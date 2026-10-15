@@ -14,7 +14,7 @@ The current case study considers a **21-day planning horizon** and jointly alloc
 
 ## 🔗 Try the Live Decision-Support App
 
-👉 **[Launch the Streamlit application](STREAMLIT_LINK_HERE)**
+👉 **[Launch the Streamlit application](https://centralised-multi-material-construction-logistics-decision-sup.streamlit.app/)**
 
 The application allows the user to select the available daily fleet capacity and enter current project and site information. The corresponding trained DQN then recommends a **joint truck allocation across all three materials**.
 
