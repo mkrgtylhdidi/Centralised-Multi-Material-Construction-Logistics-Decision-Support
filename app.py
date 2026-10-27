@@ -577,7 +577,7 @@ if submitted:
 
         st.caption(
             f"Ordered quantity: "
-            f"{a_quantity:.1f} units"
+            f"{a_quantity:.1f} tonnes"
         )
 
     with rec_b:
@@ -589,7 +589,7 @@ if submitted:
 
         st.caption(
             f"Ordered quantity: "
-            f"{b_quantity:.1f} units"
+            f"{b_quantity:.1f} sets"
         )
 
     with rec_c:
