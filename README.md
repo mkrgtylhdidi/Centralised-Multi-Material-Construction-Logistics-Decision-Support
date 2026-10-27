@@ -150,7 +150,7 @@ The main differences are:
 |---|---|
 | Single material | Three materials |
 | Independent order-quantity decision | Centralised joint truck-allocation decision |
-| One trained ordering model | Separate DQN policies for V = 4, 5 and 6 |
+| One trained ordering model | Separate DQN policies for $N_{\max}$ = 4, 5 and 6 |
 | Material-level storage | Shared site-level storage constraint |
 | 8 state features | 17-dimensional centralised operational state |
 | Discrete order quantity | Joint `(A, B, C)` fleet allocation |
@@ -163,11 +163,11 @@ This repository therefore focuses on **multi-material coordination under shared 
 ## 📁 Files Included
 
 - `app.py` — Streamlit decision-support interface
-- `dqn_V4_seed_42.pth` — trained DQN for V = 4
-- `dqn_V5_seed_42.pth` — trained DQN for V = 5
-- `dqn_V6_seed_42.pth` — trained DQN for V = 6
+- `dqn_V4_seed_42.pth` — trained DQN for $N_{\max}$ = 4
+- `dqn_V5_seed_42.pth` — trained DQN for $N_{\max}$ = 5
+- `dqn_V6_seed_42.pth` — trained DQN for $N_{\max}$ = 6
 - `requirements.txt` — Python dependencies
-- `Centralised_Multi_Material_DQN_Construction_Logistics.ipynb` — final training and evaluation notebook
+- `Centralised_Multi_Material_DQN_Construction_Logistics.ipynb` — final training and ealuation notebook
 
 ---
 
@@ -189,7 +189,7 @@ streamlit run app.py
 
 ## 🔬 Reproducibility
 
-The accompanying notebook provides the final environment configuration, DQN training procedure, multi-scenario evaluation, benchmark evaluation and truck-capacity sensitivity analysis used in the associated study.
+The accompanying notebook proides the final enironment configuration, DQN training procedure, multi-scenario evaluation, benchmark evaluation and truck-capacity sensitivity analysis used in the associated study.
 
 The Streamlit interface is a prototype implementation of the trained decision policies and is intended to demonstrate how the framework can be translated into an operational construction-logistics decision-support tool.
 
