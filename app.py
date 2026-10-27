@@ -115,8 +115,8 @@ def load_model(vehicle_limit):
 
     if saved_vehicle_limit != vehicle_limit:
         raise ValueError(
-            f"Selected V={vehicle_limit}, but model was "
-            f"trained for V={saved_vehicle_limit}."
+            f"Selected N_max={vehicle_limit}, but model was "
+            f"trained for N_max={saved_vehicle_limit}."
         )
 
     if state_dim != STATE_DIM:
@@ -212,7 +212,7 @@ capacity_col2.metric(
 )
 
 st.caption(
-    f"Using the trained DQN policy for V={vehicle_limit}."
+    f"Using the trained DQN policy for N_max={vehicle_limit}."
 )
 
 
@@ -627,7 +627,7 @@ if submitted:
     ):
 
         st.write(
-            f"Selected vehicle limit: V={vehicle_limit}"
+            f"Selected vehicle limit: N_max={vehicle_limit}"
         )
 
         st.write(
@@ -668,5 +668,5 @@ st.caption(
     "Prototype decision-support interface for construction "
     "material logistics planning. Recommendations are generated "
     "from separately trained DQN policies for daily truck "
-    "capacity limits V=4, V=5 and V=6."
+    "capacity limits N_max=4, N_max=5 and N_max=6."
 )
