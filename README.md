@@ -140,7 +140,7 @@ Each model has the same 17-dimensional operational state but a different output 
 
 ## 🔄 Relationship to the Earlier Single-Material Prototype
 
-An earlier public repository, [`dqn-order-app`](https://github.com/mkrgtylhdidi/dqn-order-app), demonstrates a **single-material reinforcement-steel ordering model**.
+An earlier public repository, [`dqn-order-app`](https://github.com/mkrgtylhdidi/dqn-order-app), demonstrates a **single-material reinforcement steel ordering model**.
 
 The present repository addresses a different and broader decision problem.
 
