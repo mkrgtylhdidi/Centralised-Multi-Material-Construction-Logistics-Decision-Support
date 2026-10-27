@@ -167,7 +167,7 @@ This repository therefore focuses on **multi-material coordination under shared 
 - `dqn_V5_seed_42.pth` — trained DQN for V = 5
 - `dqn_V6_seed_42.pth` — trained DQN for V = 6
 - `requirements.txt` — Python dependencies
-- `DQN_training_and_evaluation.ipynb` — final training and evaluation notebook *(to be added)*
+- `Centralised_Multi_Material_DQN_Construction_Logistics.ipynb` — final training and evaluation notebook
 
 ---
 
