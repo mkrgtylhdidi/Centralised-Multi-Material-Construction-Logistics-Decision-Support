@@ -167,7 +167,7 @@ This repository therefore focuses on **multi-material coordination under shared 
 - `dqn_V5_seed_42.pth` — trained DQN for $N_{\max}$ = 5
 - `dqn_V6_seed_42.pth` — trained DQN for $N_{\max}$ = 6
 - `requirements.txt` — Python dependencies
-- `Centralised_Multi_Material_DQN_Construction_Logistics.ipynb` — final training and ealuation notebook
+- `Centralised_Multi_Material_DQN_Construction_Logistics.ipynb` — final training and evaluation notebook
 
 ---
 
@@ -189,7 +189,7 @@ streamlit run app.py
 
 ## 🔬 Reproducibility
 
-The accompanying notebook proides the final enironment configuration, DQN training procedure, multi-scenario evaluation, benchmark evaluation and truck-capacity sensitivity analysis used in the associated study.
+The accompanying notebook provides the final environment configuration, DQN training procedure, multi-scenario evaluation, benchmark evaluation and truck-capacity sensitivity analysis used in the associated study.
 
 The Streamlit interface is a prototype implementation of the trained decision policies and is intended to demonstrate how the framework can be translated into an operational construction-logistics decision-support tool.
 
