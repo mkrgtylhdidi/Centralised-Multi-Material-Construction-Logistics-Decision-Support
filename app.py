@@ -243,7 +243,7 @@ with st.form("logistics_input_form"):
         max_value=21,
         value=1,
         step=1,
-        help="Day within the 21-day structural-phase planning horizon."
+        help="Day within the 21-day planning horizon."
     )
 
     st.markdown("---")
