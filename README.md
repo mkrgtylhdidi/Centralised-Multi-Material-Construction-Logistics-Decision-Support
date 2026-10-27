@@ -42,17 +42,17 @@ This allows the policy to allocate limited delivery capacity across competing ma
 
 ## 🚛 Selectable Daily Fleet Capacity
 
-The prototype provides separately trained DQN policies for three daily fleet-capacity (\(N_{\max}\)) settings:
+The prototype provides separately trained DQN policies for three daily fleet-capacity ($N_{\max}$) settings:
 
-- **\(N_{\max}\) = 4 trucks/day**
-- **\(N_{\max}\) = 5 trucks/day**
-- **\(N_{\max}\) = 6 trucks/day**
+- **$N_{\max}$ = 4 trucks/day**
+- **$N_{\max}$ = 5 trucks/day**
+- **$N_{\max}$ = 6 trucks/day**
 
 The corresponding joint-action spaces contain:
 
-- \(N_{\max}\) = 4 → **35 feasible joint allocations**
-- \(N_{\max}\) = 5 → **56 feasible joint allocations**
-- \(N_{\max}\) = 6 → **84 feasible joint allocations**
+- $N_{\max}$ = 4 → **35 feasible joint allocations**
+- $N_{\max}$ = 5 → **56 feasible joint allocations**
+- $N_{\max}$ = 6 → **84 feasible joint allocations**
 
 Selecting a fleet size in the Streamlit interface automatically loads the corresponding trained DQN model.
 
