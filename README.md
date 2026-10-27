@@ -42,7 +42,7 @@ This allows the policy to allocate limited delivery capacity across competing ma
 
 ## 🚛 Selectable Daily Fleet Capacity
 
-The prototype provides separately trained DQN policies for three daily fleet-capacity settings:
+The prototype provides separately trained DQN policies for three daily fleet-capacity (V) settings:
 
 - **V = 4 trucks/day**
 - **V = 5 trucks/day**
